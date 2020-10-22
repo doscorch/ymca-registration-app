@@ -35,8 +35,10 @@ class Program extends React.Component {
                             <p>{new Date(program.endDate).toLocaleDateString()}</p>
                             <h6>Meets</h6>
                             <p>{program.meetTime}</p>
-                            <h6>Price</h6>
-                            <p>{program.price}</p>
+                            <h6>Nonmember Price</h6>
+                            <p>{program.nonmemberPrice}</p>
+                            <h6>Member Price</h6>
+                            <p>{program.memberPrice}</p>
                             <h6>Current Enrollment</h6>
                             <p>0/{program.participantLimit}</p>
 

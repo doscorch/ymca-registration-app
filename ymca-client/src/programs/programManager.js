@@ -17,7 +17,8 @@ export default class ProgramManager extends React.Component {
                     { title: 'Title', field: 'title' },
                     { title: 'Description', field: 'description' },
                     { title: 'Location', field: 'location' },
-                    { title: 'Price', field: 'price' },
+                    { title: 'Nonmember Price', field: 'nonmemberPrice' },
+                    { title: 'Member Price', field: 'memberPrice' },
                     { title: 'Participant limit', field: 'participantLimit' },
                     {
                         title: 'Start Date',

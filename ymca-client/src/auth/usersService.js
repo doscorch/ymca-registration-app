@@ -7,7 +7,7 @@ const users = client.service('users');
 export const registerUser = async (email, password, firstName, lastName) => {
     console.log(email);
     console.log(password);
-    return await users.create({ "email": email, "password": password, "firstName": firstName, "lastName": lastName, userRole: "member" }, {});
+    return await users.create({ "email": email, "password": password, "firstName": firstName, "lastName": lastName, userRole: "nonmember" }, {});
 }
 
 export const loginUser = async (email, password) => {
