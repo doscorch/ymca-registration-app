@@ -10,6 +10,10 @@ export const registerUser = async (email, password, firstName, lastName) => {
     return await users.create({ "email": email, "password": password, "firstName": firstName, "lastName": lastName, userRole: "nonmember" }, {});
 }
 
+export const getUsers = async () => {
+    return users.find().then(u => u.data)
+}
+
 export const loginUser = async (email, password) => {
     console.log(email);
     console.log(password);
