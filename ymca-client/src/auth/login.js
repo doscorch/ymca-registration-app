@@ -8,7 +8,7 @@ import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
 import Alert from '@material-ui/lab/Alert';
 
-import { loginUser } from './usersService';
+import { getUser, loginUser } from './usersService';
 import { goHome } from '../errorHandling';
 import { connect } from 'react-redux';
 import { app_login } from '../redux/actions/userActions'
@@ -24,14 +24,22 @@ class Login extends React.Component {
 
     login = async (e) => {
         e.preventDefault();
-        let res = await loginUser(this.state.email, this.state.password);
-        console.log(res);
-        if (res.error) {
-            this.setState({ error: res.error });
+        let user = await getUser(this.state.email);
+        if (!user) {
+            this.setState({ error: "invalid login" });
+        }
+        else if (!(user.isActive || typeof user.isActive === "undefined")) {
+            this.setState({ error: "This account is no longer active. Contact staff." });
         }
         else {
-            this.props.app_login(res.user);
-            this.props.history.push('/');
+            let res = await loginUser(this.state.email, this.state.password);
+            if (res.error) {
+                this.setState({ error: res.error });
+            }
+            else {
+                this.props.app_login(res.user);
+                this.props.history.push('/');
+            }
         }
     }
 

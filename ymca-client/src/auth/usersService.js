@@ -5,8 +5,6 @@ import client from "../feathersClient";
 const users = client.service('users');
 
 export const registerUser = async (email, password, firstName, lastName) => {
-    console.log(email);
-    console.log(password);
     return await users.create({ "email": email, "password": password, "firstName": firstName, "lastName": lastName, userRole: "nonmember" }, {});
 }
 
@@ -14,9 +12,23 @@ export const getUsers = async () => {
     return users.find().then(u => u.data)
 }
 
+export const getUser = async (email) => {
+    return users.find({
+        query: {
+            email: email
+        }
+    }).then(u => u.data.length ? u.data[0] : undefined)
+}
+
+export const updateUser = async (user) => {
+    return await users.update(user._id, user, {});
+}
+
+export const patchUser = async (userPartial) => {
+    return await users.patch(userPartial._id, userPartial, {})
+}
+
 export const loginUser = async (email, password) => {
-    console.log(email);
-    console.log(password);
     try {
         if (!email && !password) {
             let auth = await client.reAuthenticate();
@@ -31,7 +43,6 @@ export const loginUser = async (email, password) => {
                 email: email,
                 password: password,
             });
-            console.log(auth);
             return {
                 user: auth.user,
                 error: false,

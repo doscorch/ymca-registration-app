@@ -129,6 +129,7 @@ class Program extends React.Component {
             : false;
         const isCurrentlyEnrolled = enrollments.some(e => e.userId == userId);
         const showEnrollmentBtn = !hasTimeConflict && hasUser && !isCurrentlyEnrolled && enrollments.length < program.participantLimit;
+        const isFull = enrollments.length >= program.participantLimit;
         const rowStyle = { padding: ".25em" };
         return (
             <Container fluid>
@@ -200,6 +201,7 @@ class Program extends React.Component {
                                     {showEnrollmentBtn ? <Button onClick={this.enroll}>Enroll</Button> : ""}
                                     {isCurrentlyEnrolled ? <Alert severity="success">Currently Enrolled: view enrollments in <Link href='/account'>my account</Link></Alert> : ""}
                                     {hasTimeConflict ? <Alert severity="info">Scheduling Conflict: you cannot enroll in this program</Alert> : ""}
+                                    {(isFull && !isCurrentlyEnrolled) ? <Alert severity="info">program is currently at capacity</Alert> : ""}
                                 </Col>
                             </Row>
                         </Card>

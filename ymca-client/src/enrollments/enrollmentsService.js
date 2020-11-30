@@ -12,5 +12,29 @@ export const updateEnrollment = async (enrollment) => {
 export const deleteEnrollment = async (id) => {
     return await enrollments.remove(id, {});
 }
+export const cancelEnrollmentsByProgramId = async (programId) => {
+    const result = await enrollments.find({
+        query: {
+            programId: programId
+        }
+    });
+    if (result.data && result.data.length) {
+        result.data.forEach(e => {
+            deleteEnrollment(e._id);
+        });
+    }
+}
 
+export const cancelEnrollmentsByUserId = async (userId) => {
+    const result = await enrollments.find({
+        query: {
+            userId: userId
+        }
+    });
+    if (result.data && result.data.length) {
+        result.data.forEach(e => {
+            deleteEnrollment(e._id);
+        });
+    }
+}
 

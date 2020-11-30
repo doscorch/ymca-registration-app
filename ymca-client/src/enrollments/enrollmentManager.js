@@ -5,40 +5,49 @@ import { getUsers } from '../auth/usersService';
 import { Select, MenuItem } from '@material-ui/core'
 
 export default class EnrollmentManager extends React.Component {
+    state = {
+        enrollments: []
+    }
+    componentDidMount() {
+        this.getData();
+    }
+
+    getData = () => {
+        return getUsers().then(users => {
+            fetch('http://localhost:3030/programs')
+                .then(response => response.json())
+                .then(p => {
+                    const programs = p.data;
+                    fetch('http://localhost:3030/enrollments')
+                        .then(response => response.json())
+                        .then(e => {
+                            const enrollments = e.data;
+                            const result = enrollments.map(e => {
+                                const program = programs.find(p => p._id == e.programId);
+                                const user = users.find(u => u._id == e.userId);
+                                return {
+                                    _id: e._id,
+                                    userId: e.userId,
+                                    userEmail: user.email,
+                                    isApproved: e.isApproved,
+                                    programId: program._id,
+                                    programTitle: program.title,
+                                };
+                            });
+                            this.setState({ enrollments: result })
+                            //resolve({ data: result });
+                        });
+                });
+        })
+    }
+
     render() {
         const tableRef = React.createRef();
-        const getData = (resolve, reject) => {
-            getUsers().then(users => {
-                fetch('http://localhost:3030/programs')
-                    .then(response => response.json())
-                    .then(p => {
-                        const programs = p.data;
-                        fetch('http://localhost:3030/enrollments')
-                            .then(response => response.json())
-                            .then(e => {
-                                const enrollments = e.data;
-                                const result = enrollments.map(e => {
-                                    const program = programs.find(p => p._id == e.programId);
-                                    const user = users.find(u => u._id == e.userId);
-                                    return {
-                                        _id: e._id,
-                                        userId: e.userId,
-                                        userEmail: user.email,
-                                        isApproved: e.isApproved,
-                                        programId: program._id,
-                                        programTitle: program.title,
-                                    };
-                                });
-                                resolve({ data: result });
-                            });
-                    });
-            })
-        }
         return (
             <MaterialTable
                 tableRef={tableRef}
                 options={{
-                    search: false,
+                    search: true,
                     paging: false,
                     sorting: true,
                 }}
@@ -66,10 +75,10 @@ export default class EnrollmentManager extends React.Component {
                     },
                 ]
                 }
-                data={_ => new Promise(getData)}
+                data={this.state.enrollments}
                 editable={{
-                    onRowUpdate: (newData, oldData) => updateEnrollment(newData),
-                    onRowDelete: (oldData) => deleteEnrollment(oldData._id),
+                    onRowUpdate: (newData, oldData) => { return updateEnrollment(newData).then(_ => this.getData()) },
+                    onRowDelete: (oldData) => { return deleteEnrollment(oldData._id).then(_ => this.getData()) },
                 }}
             />
         )

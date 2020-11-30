@@ -6,12 +6,27 @@ import { createProgram, deleteProgram, updateProgram } from './programsService';
 import { Multiselect } from 'multiselect-react-dropdown';
 import DateFnsUtils from '@date-io/date-fns';
 import { MuiPickersUtilsProvider, KeyboardTimePicker } from '@material-ui/pickers';
+import { cancelEnrollmentsByProgramId } from '../enrollments/enrollmentsService';
 
 export default class ProgramManager extends React.Component {
     state = {
         days: [{ name: "Monday" }, { name: "Tuesday" }, { name: "Wednesday" }, { name: "Thursday" }, { name: "Friday" }, { name: "Saturday" }, { name: "Sunday" }],
-
+        programs: []
     }
+
+    componentDidMount() {
+        this.getData();
+    }
+
+    getData = () => {
+        let url = 'http://localhost:3030/programs'
+        return fetch(url)
+            .then(response => response.json())
+            .then(result => {
+                this.setState({ programs: result.data })
+            })
+    }
+
     render() {
         const days = this.state.days;
         const tableRef = React.createRef();
@@ -20,7 +35,8 @@ export default class ProgramManager extends React.Component {
             <MaterialTable
                 tableRef={tableRef}
                 options={{
-                    search: false,
+                    sorting: true,
+                    search: true,
                     paging: false,
                     tableLayout: "fixed",
                 }}
@@ -120,23 +136,14 @@ export default class ProgramManager extends React.Component {
                         headerStyle: width
                     },
                 ]}
-                data={
-                    query =>
-                        new Promise((resolve, reject) => {
-                            let url = 'http://localhost:3030/programs'
-                            fetch(url)
-                                .then(response => response.json())
-                                .then(result => {
-                                    resolve({
-                                        data: result.data,
-                                    })
-                                })
-                        })
-                }
+                data={this.state.programs}
                 editable={{
-                    onRowAdd: (newData) => createProgram(newData),
-                    onRowUpdate: (newData, oldData) => updateProgram(newData),
-                    onRowDelete: (oldData) => deleteProgram(oldData._id),
+                    onRowAdd: (newRow) => { return createProgram(newRow).then(_ => this.getData()) },
+                    onRowUpdate: (newData, oldData) => { return updateProgram(newData).then(_ => this.getData()) },
+                    onRowDelete: (oldData) => {
+                        cancelEnrollmentsByProgramId(oldData._id);
+                        return deleteProgram(oldData._id).then(_ => this.getData())
+                    }
                 }}
             />
         )

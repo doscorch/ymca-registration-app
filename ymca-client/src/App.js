@@ -12,6 +12,7 @@ import { app_logout } from './redux/actions/userActions';
 import { connect } from 'react-redux';
 import ProgramManager from './programs/programManager'
 import EnrollmentManager from './enrollments/enrollmentManager'
+import UserManager from './users/userManager'
 import MyAccount from './auth/myAccount';
 
 class App extends React.Component {
@@ -37,6 +38,7 @@ class App extends React.Component {
               <Nav.Link as={Link} to="/programs">Programs</Nav.Link>
               {isStaff || isAdmin ? <Nav.Link as={Link} to="/program-manager">Manage Programs</Nav.Link> : ""}
               {isStaff || isAdmin ? <Nav.Link as={Link} to="/enrollment-manager">Manage Enrollments</Nav.Link> : ""}
+              {isStaff || isAdmin ? <Nav.Link as={Link} to="/user-manager">Manage Users</Nav.Link> : ""}
               {/* {hasUser ? <Nav.Link as={Link} to="/staff">Staff</Nav.Link> : ""} */}
             </Nav>
             <Nav>
@@ -57,6 +59,7 @@ class App extends React.Component {
         <Route path="/account" component={MyAccount} />
         <Route path="/program-manager" component={ProgramManager} />
         <Route path="/enrollment-manager" component={EnrollmentManager} />
+        <Route path="/user-manager" component={UserManager} />
         <Route path="/programs/:id" component={Program} />
       </div>
     );
