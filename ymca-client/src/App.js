@@ -14,6 +14,7 @@ import ProgramManager from './programs/programManager'
 import EnrollmentManager from './enrollments/enrollmentManager'
 import UserManager from './users/userManager'
 import MyAccount from './auth/myAccount';
+import HelpPage from './help'
 
 class App extends React.Component {
 
@@ -46,6 +47,7 @@ class App extends React.Component {
               {hasUser ? <Nav.Link as={Link} to="/account"><i className="fas fa-user"></i> {this.props.user.email}</Nav.Link> : ""}
               {!hasUser ? <Nav.Link as={Link} to="/login"><i className="fas fa-sign-in-alt"></i> Login</Nav.Link> : ""}
               {!hasUser ? <Nav.Link as={Link} to="/register"><i className="fas fa-user"></i> Register</Nav.Link> : ""}
+              <Nav.Link as={Link} to="/help"><i className="fas fa-question-circle"></i> Help</Nav.Link>
             </Nav>
           </Navbar.Collapse>
         </Navbar>
@@ -61,6 +63,7 @@ class App extends React.Component {
         <Route path="/enrollment-manager" component={EnrollmentManager} />
         <Route path="/user-manager" component={UserManager} />
         <Route path="/programs/:id" component={Program} />
+        <Route path="/help" component={HelpPage} />
       </div>
     );
   }
