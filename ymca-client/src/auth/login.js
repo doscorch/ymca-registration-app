@@ -14,7 +14,6 @@ import { connect } from 'react-redux';
 import { app_login } from '../redux/actions/userActions'
 import { withRouter } from 'react-router-dom';
 
-
 class Login extends React.Component {
     state = {
         email: "",
@@ -24,14 +23,17 @@ class Login extends React.Component {
 
     login = async (e) => {
         e.preventDefault();
+        // get user from db
         let user = await getUser(this.state.email);
         if (!user) {
             this.setState({ error: "invalid login" });
         }
         else if (!(user.isActive || typeof user.isActive === "undefined")) {
+            // inactive users cant login!
             this.setState({ error: "This account is no longer active. Contact staff." });
         }
         else {
+            // log the user in and go home
             let res = await loginUser(this.state.email, this.state.password);
             if (res.error) {
                 this.setState({ error: res.error });

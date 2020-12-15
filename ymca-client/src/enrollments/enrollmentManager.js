@@ -13,15 +13,19 @@ export default class EnrollmentManager extends React.Component {
     }
 
     getData = () => {
+        // get users
         return getUsers().then(users => {
             fetch('http://localhost:3030/programs')
                 .then(response => response.json())
                 .then(p => {
                     const programs = p.data;
+
+                    // get enrollments
                     fetch('http://localhost:3030/enrollments')
                         .then(response => response.json())
                         .then(e => {
                             const enrollments = e.data;
+                            // map together enrollment manager data
                             const result = enrollments.map(e => {
                                 const program = programs.find(p => p._id == e.programId);
                                 const user = users.find(u => u._id == e.userId);
@@ -35,7 +39,6 @@ export default class EnrollmentManager extends React.Component {
                                 };
                             });
                             this.setState({ enrollments: result })
-                            //resolve({ data: result });
                         });
                 });
         })

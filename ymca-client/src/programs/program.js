@@ -13,6 +13,7 @@ weekdays[4] = "Thursday";
 weekdays[5] = "Friday";
 weekdays[6] = "Saturday";
 
+// function to find if dates have any overlap
 function overlap(dates) {
     const sortedDates = dates.sort((previous, current) => {
         const previousTime = previous.start.getTime();
@@ -40,6 +41,8 @@ function overlap(dates) {
 
     return false;
 }
+
+// function to get all meetings datetime for a program
 function getMeetings(meetings, program) {
     const programStartDate = new Date(program.startDate);
     const programEndDate = new Date(program.endDate);
@@ -61,6 +64,7 @@ function getMeetings(meetings, program) {
         date.setDate(date.getDate() + 1);
     }
 }
+
 class Program extends React.Component {
     state = {
         program: {},
@@ -71,6 +75,8 @@ class Program extends React.Component {
     enroll = () => {
         const programId = this.state.program._id;
         const userId = this.props.user._id;
+
+        // post enrollment
         fetch("http://localhost:3030/enrollments", {
             method: "POST",
             body: JSON.stringify({
@@ -91,21 +97,25 @@ class Program extends React.Component {
         this.getAllPrograms();
     }
     getAllPrograms() {
+        // get programs
         fetch('http://localhost:3030/programs')
             .then(response => response.json())
             .then(data => this.setState({ allPrograms: data.data }));
     }
     getPrograms(id) {
+        // get programs by id
         fetch('http://localhost:3030/programs/' + id)
             .then(response => response.json())
             .then(data => this.setState({ program: data }));
     }
     getEnrollments(id) {
+        // get enrollments by program id
         fetch('http://localhost:3030/enrollments?programId=' + id)
             .then(response => response.json())
             .then(data => this.setState({ enrollments: data.data }));
     }
     getUserEnrollments(id) {
+        // get enrollments by user id
         fetch('http://localhost:3030/enrollments?userId=' + id)
             .then(response => response.json())
             .then(data => this.setState({ userEnrollments: data.data }));

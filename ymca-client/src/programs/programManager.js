@@ -19,6 +19,7 @@ export default class ProgramManager extends React.Component {
     }
 
     getData = () => {
+        // get programs
         let url = 'http://localhost:3030/programs'
         return fetch(url)
             .then(response => response.json())

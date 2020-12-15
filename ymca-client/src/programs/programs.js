@@ -7,6 +7,7 @@ export default class Programs extends React.Component {
         programs: [],
     }
     componentDidMount() {
+        // get programs
         fetch('http://localhost:3030/programs')
             .then(response => response.json())
             .then(data => this.setState({ programs: data.data }));

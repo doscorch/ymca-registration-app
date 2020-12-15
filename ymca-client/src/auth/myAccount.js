@@ -11,22 +11,23 @@ class MyAccount extends React.Component {
         enrollments: [],
         programs: [],
     }
-    componentDidMount() {
 
-    }
     render() {
         const tableRef = React.createRef();
         const user = this.props.user;
         const getData = (resolve, reject) => {
             const userId = this.props.user._id;
+            // get programs
             fetch('http://localhost:3030/programs')
                 .then(response => response.json())
                 .then(p => {
                     const programs = p.data;
+                    // get enrollments by userid
                     fetch('http://localhost:3030/enrollments?userId=' + userId)
                         .then(response => response.json())
                         .then(e => {
                             const enrollments = e.data;
+                            // map together my account enrollments data
                             const result = enrollments.map(e => {
                                 const program = programs.find(p => p._id == e.programId);
                                 return {

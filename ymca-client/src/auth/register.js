@@ -26,6 +26,7 @@ export default class Register extends React.Component {
 
     registerUser = async (e) => {
         e.preventDefault();
+        // error handling
         if (!this.state.email) {
             this.setState({ error: "please provide email" })
             return;
@@ -34,6 +35,8 @@ export default class Register extends React.Component {
             this.setState({ error: "please provide password" })
             return;
         }
+
+        // register user
         await registerUser(this.state.email, this.state.password, this.state.firstName, this.state.lastName)
         this.setState({ ...initState, success: "user successfully created.. please login" });
     }
